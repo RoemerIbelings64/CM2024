@@ -1,0 +1,57 @@
+---
+title: "CM2024"
+author: "Roemer Ibelings"
+date: '2024-02-14'
+output:
+    flexdashboard::flex_dashboard:
+        storyboard: true
+        theme: bootstrap
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(spotifyr)
+library(plotly)
+```
+
+### Introduction {data-commentary-width=400}
+
+```{r}
+```
+
+*** 
+
+African music has found it's way to the Western hit lists nowadays. I want to research the difference between traditional african music and the African music from nowadays. Are still elements that can be found in both?
+
+### Analysis 
+
+```{r, echo = FALSE}
+traditional <- get_playlist_audio_features("", "4sLTOwxhhj8yDJAxjPz0KZ")
+hits2023 <- get_playlist_audio_features("", "4ZtmMuXoeI14XT7pubLq70")
+
+traditional_plot <- ggplot(traditional, aes(danceability)) +
+  geom_histogram(binwidth = 0.1, fill = "red") +
+  ggtitle("Traditional") +
+  geom_vline(aes(xintercept=mean(danceability)))
+
+hits2023_plot <- ggplot(hits2023, aes(danceability)) +
+  geom_histogram(binwidth = 0.1, fill = "blue") +
+  ggtitle("Hits 2023") +
+  geom_vline(aes(xintercept=mean(danceability)))
+
+ggplotly(traditional_plot)
+ggplotly(hits2023_plot)
+```
+
+***
+
+These plots show the difference in danceability between the traditional and the hits from now. It also shows the mean. I ofcourse need to work more on it. I'm also aware of the fact that maybe African music is way too broad of a topic.
+
+### Conclusion
+
+```{r}
+```
+
+
+
