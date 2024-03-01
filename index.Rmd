@@ -13,40 +13,160 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(spotifyr)
 library(plotly)
+library(compmus)
 ```
 
 ### Introduction {data-commentary-width=400}
 
-```{r}
+```{r, echo = FALSE}
+
+## section 1
+bzt <-
+  get_tidy_audio_analysis("1DfGPEHxTYeaJpiNA4xUb5") |> # Change URI.
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+# ## section 2
+bzt |>
+  compmus_gather_timbre() |>
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +
+  theme_classic()
+
+## section 3
+bzt |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "") +
+  ggtitle("Für Elise by Beethoven")
+```
+
+```{r, echo = FALSE}
+
+## section 1
+bzt <-
+  get_tidy_audio_analysis("3HolazxMAM4peSYUDJf5Yb") |> # Change URI.
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+## section 2
+bzt |>
+  compmus_gather_timbre() |>
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +
+  theme_classic()
+
+## section 3
+bzt |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "") +
+  ggtitle("Für Elise Latin-remake")
 ```
 
 *** 
 
-African music has found it's way to the Western hit lists nowadays. I want to research the difference between traditional african music and the African music from nowadays. Are still elements that can be found in both?
+I want to conduct research on the differences between music from Latin America and the West. To achieve this, I curated a corpus consisting of two playlists. The first list comprises of "Latin-remake" versions of well-known Western songs, while the second list consists of the original versions of these songs. My aim is to investigate what makes a song sound distinctly Latin. Are there underlying structures at play? Perhaps it's in the instrumentation; features like timbre.
+
+In these self similarity matrices I compared the song Fur Elise with it the Latin remake version of it. I chose this one because it's one of the few songs in the corpus without singing on it. After fidgeting with the features of the self similarity matrix I found this similar pattern in both songs. The settings of both the matrices are set so you can see the similarity in timbre. After listening to both songs I found out that a certain high pitched piano piece must be this. Unfortunately I did not find any difference between both playlists, which could indicate what makes a latin song. But this similarity could maybe contribute later in the research.
 
 ### Analysis 
 
+
+
 ```{r, echo = FALSE}
-traditional <- get_playlist_audio_features("", "4sLTOwxhhj8yDJAxjPz0KZ")
-hits2023 <- get_playlist_audio_features("", "4ZtmMuXoeI14XT7pubLq70")
-
-traditional_plot <- ggplot(traditional, aes(danceability)) +
-  geom_histogram(binwidth = 0.1, fill = "red") +
-  ggtitle("Traditional") +
-  geom_vline(aes(xintercept=mean(danceability)))
-
-hits2023_plot <- ggplot(hits2023, aes(danceability)) +
-  geom_histogram(binwidth = 0.1, fill = "blue") +
-  ggtitle("Hits 2023") +
-  geom_vline(aes(xintercept=mean(danceability)))
-
-ggplotly(traditional_plot)
-ggplotly(hits2023_plot)
+# traditional <- get_playlist_audio_features("", "4sLTOwxhhj8yDJAxjPz0KZ")
+# hits2023 <- get_playlist_audio_features("", "4ZtmMuXoeI14XT7pubLq70")
+# 
+# traditional_plot <- ggplot(traditional, aes(danceability)) +
+#   geom_histogram(binwidth = 0.1, fill = "red") +
+#   ggtitle("Traditional") +
+#   geom_vline(aes(xintercept=mean(danceability)))
+# 
+# hits2023_plot <- ggplot(hits2023, aes(danceability)) +
+#   geom_histogram(binwidth = 0.1, fill = "blue") +
+#   ggtitle("Hits 2023") +
+#   geom_vline(aes(xintercept=mean(danceability)))
+# 
+# ggplotly(traditional_plot)
+# ggplotly(hits2023_plot)
 ```
 
 ***
 
-These plots show the difference in danceability between the traditional and the hits from now. It also shows the mean. I ofcourse need to work more on it. I'm also aware of the fact that maybe African music is way too broad of a topic.
+In these 
 
 ### Conclusion
 
