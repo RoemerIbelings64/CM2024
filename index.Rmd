@@ -16,7 +16,180 @@ library(plotly)
 library(compmus)
 ```
 
+### Key and Chord analysis
+
+
+```{r, echo = FALSE}
+## section 1
+
+circshift <- function(v, n) {
+  if (n == 0) v else c(tail(v, n), head(v, -n))
+}
+
+#      C     C#    D     Eb    E     F     F#    G     Ab    A     Bb    B
+major_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    0,    0)
+minor_chord <-
+  c(   1,    0,    0,    1,    0,    0,    0,    1,    0,    0,    0,    0)
+seventh_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    1,    0)
+
+major_key <-
+  c(6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88)
+minor_key <-
+  c(6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17)
+
+chord_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:7", circshift(seventh_chord, 6),
+    "Gb:maj", circshift(major_chord, 6),
+    "Bb:min", circshift(minor_chord, 10),
+    "Db:maj", circshift(major_chord, 1),
+    "F:min", circshift(minor_chord, 5),
+    "Ab:7", circshift(seventh_chord, 8),
+    "Ab:maj", circshift(major_chord, 8),
+    "C:min", circshift(minor_chord, 0),
+    "Eb:7", circshift(seventh_chord, 3),
+    "Eb:maj", circshift(major_chord, 3),
+    "G:min", circshift(minor_chord, 7),
+    "Bb:7", circshift(seventh_chord, 10),
+    "Bb:maj", circshift(major_chord, 10),
+    "D:min", circshift(minor_chord, 2),
+    "F:7", circshift(seventh_chord, 5),
+    "F:maj", circshift(major_chord, 5),
+    "A:min", circshift(minor_chord, 9),
+    "C:7", circshift(seventh_chord, 0),
+    "C:maj", circshift(major_chord, 0),
+    "E:min", circshift(minor_chord, 4),
+    "G:7", circshift(seventh_chord, 7),
+    "G:maj", circshift(major_chord, 7),
+    "B:min", circshift(minor_chord, 11),
+    "D:7", circshift(seventh_chord, 2),
+    "D:maj", circshift(major_chord, 2),
+    "F#:min", circshift(minor_chord, 6),
+    "A:7", circshift(seventh_chord, 9),
+    "A:maj", circshift(major_chord, 9),
+    "C#:min", circshift(minor_chord, 1),
+    "E:7", circshift(seventh_chord, 4),
+    "E:maj", circshift(major_chord, 4),
+    "G#:min", circshift(minor_chord, 8),
+    "B:7", circshift(seventh_chord, 11),
+    "B:maj", circshift(major_chord, 11),
+    "D#:min", circshift(minor_chord, 3)
+  )
+
+key_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:maj", circshift(major_key, 6),
+    "Bb:min", circshift(minor_key, 10),
+    "Db:maj", circshift(major_key, 1),
+    "F:min", circshift(minor_key, 5),
+    "Ab:maj", circshift(major_key, 8),
+    "C:min", circshift(minor_key, 0),
+    "Eb:maj", circshift(major_key, 3),
+    "G:min", circshift(minor_key, 7),
+    "Bb:maj", circshift(major_key, 10),
+    "D:min", circshift(minor_key, 2),
+    "F:maj", circshift(major_key, 5),
+    "A:min", circshift(minor_key, 9),
+    "C:maj", circshift(major_key, 0),
+    "E:min", circshift(minor_key, 4),
+    "G:maj", circshift(major_key, 7),
+    "B:min", circshift(minor_key, 11),
+    "D:maj", circshift(major_key, 2),
+    "F#:min", circshift(minor_key, 6),
+    "A:maj", circshift(major_key, 9),
+    "C#:min", circshift(minor_key, 1),
+    "E:maj", circshift(major_key, 4),
+    "G#:min", circshift(minor_key, 8),
+    "B:maj", circshift(major_key, 11),
+    "D#:min", circshift(minor_key, 3)
+  )
+
+## section 2.1 i love rock n roll
+twenty_six <-
+  get_tidy_audio_analysis("2Cdvbe2G4hZsnhNMKyGrie") |>
+  compmus_align(sections, segments) |>
+  select(sections) |>
+  unnest(sections) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
+  )
+
+## section 3.1
+twenty_six |> 
+  compmus_match_pitch_template(
+    key_templates,         # Change to chord_templates if desired
+    method = "manhattan",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "") +
+  ggtitle("Original")
+
+## section 2.2 i love rock n roll latin
+twenty_five <-
+  get_tidy_audio_analysis("1kCQGipg9DCCtTlx80wZ8J") |>
+  compmus_align(sections, segments) |>
+  select(sections) |>
+  unnest(sections) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
+  )
+
+## section 3.2
+twenty_five |> 
+  compmus_match_pitch_template(
+    key_templates,         # Change to chord_templates if desired
+    method = "manhattan",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "") +
+  ggtitle("Latin remake")
+
+
+
+
+
+```
+
+*** 
+
+Here two keygrams are presented. They both are of the song called "I love rock and roll". The first keygram is of the original by Joan Jett & The Black Hearts. The second is a latin remake by The Mariachis. 
+
+I chose this song to show the dissimilarity in key between the original and latin remake. When listening to these two songs the original is with heavy guitars and the latin remake is well... very latin sounding; accoustic guitar and trumpets.
+
+As you can see the original song is played in E major and E minor. The remake is played in A minor. The blue column after 150 seconds is due to a percussion heavy bridge in the song.
+
+
 ### Introduction {data-commentary-width=400}
+
+*** 
+
+I want to conduct research on the differences between music from Latin America and the West. To achieve this, I curated a corpus consisting of two playlists. The first list comprises of "Latin-remake" versions of well-known Western songs, while the second list consists of the original versions of these songs. My aim is to investigate what makes a song sound distinctly Latin. Are there underlying structures at play? Perhaps it's in the instrumentation; features like timbre.
+
+### Self similarity matrix
 
 ```{r, echo = FALSE}
 
@@ -136,37 +309,83 @@ bzt |>
   ggtitle("Für Elise Latin-remake")
 ```
 
-*** 
-
-I want to conduct research on the differences between music from Latin America and the West. To achieve this, I curated a corpus consisting of two playlists. The first list comprises of "Latin-remake" versions of well-known Western songs, while the second list consists of the original versions of these songs. My aim is to investigate what makes a song sound distinctly Latin. Are there underlying structures at play? Perhaps it's in the instrumentation; features like timbre.
+***
 
 In these self similarity matrices I compared the song Fur Elise with it the Latin remake version of it. I chose this one because it's one of the few songs in the corpus without singing on it. After fidgeting with the features of the self similarity matrix I found this similar pattern in both songs. The settings of both the matrices are set so you can see the similarity in timbre. After listening to both songs I found out that a certain high pitched piano piece must be this. Unfortunately I did not find any difference between both playlists, which could indicate what makes a latin song. But this similarity could maybe contribute later in the research.
 
-### Analysis 
+### test
 
-
-
-```{r, echo = FALSE}
-# traditional <- get_playlist_audio_features("", "4sLTOwxhhj8yDJAxjPz0KZ")
-# hits2023 <- get_playlist_audio_features("", "4ZtmMuXoeI14XT7pubLq70")
+```{r, echo=FALSE}
+# ## section 1
+# bebop <-
+#   get_playlist_audio_features(
+#     "thesoundsofspotify",
+#     "55s8gstHcaCyfU47mQgLrB"
+#   ) |>
+#   slice(1:30) |>
+#   add_audio_analysis()
+# bigband <-
+#   get_playlist_audio_features(
+#     "thesoundsofspotify",
+#     "2cjIvuw4VVOQSeUAZfNiqY"
+#   ) |>
+#   slice(1:30) |>
+#   add_audio_analysis()
+# jazz <-
+#   bebop |>
+#   mutate(genre = "Bebop") |>
+#   bind_rows(bigband |> mutate(genre = "Big Band"))
 # 
-# traditional_plot <- ggplot(traditional, aes(danceability)) +
-#   geom_histogram(binwidth = 0.1, fill = "red") +
-#   ggtitle("Traditional") +
-#   geom_vline(aes(xintercept=mean(danceability)))
+# ## section 2
+# jazz |>
+#   mutate(
+#     sections =
+#       map(
+#         sections,                                    # sections or segments
+#         summarise_at,
+#         vars(tempo, loudness, duration),             # features of interest
+#         list(section_mean = mean, section_sd = sd)   # aggregation functions
+#       )
+#   ) |>
+#   unnest(sections) |>
+#   ggplot(
+#     aes(
+#       x = tempo,
+#       y = tempo_section_sd,
+#       colour = genre,
+#       alpha = loudness
+#     )
+#   ) +
+#   geom_point(aes(size = duration / 60)) +
+#   geom_rug() +
+#   theme_minimal() +
+#   ylim(0, 5) +
+#   labs(
+#     x = "Mean Tempo (bpm)",
+#     y = "SD Tempo",
+#     colour = "Genre",
+#     size = "Duration (min)",
+#     alpha = "Volume (dBFS)"
+#   )
 # 
-# hits2023_plot <- ggplot(hits2023, aes(danceability)) +
-#   geom_histogram(binwidth = 0.1, fill = "blue") +
-#   ggtitle("Hits 2023") +
-#   geom_vline(aes(xintercept=mean(danceability)))
-# 
-# ggplotly(traditional_plot)
-# ggplotly(hits2023_plot)
+# ## section 3
+# jazz |>
+#   mutate(
+#     timbre =
+#       map(
+#         segments,
+#         compmus_summarise,
+#         timbre,
+#         method = "mean"
+#       )
+#   ) |>
+#   select(genre, timbre) |>
+#   compmus_gather_timbre() |>
+#   ggplot(aes(x = basis, y = value, fill = genre)) +
+#   geom_violin() +
+#   scale_fill_viridis_d() +
+#   labs(x = "Spotify Timbre Coefficients", y = "", fill = "Genre")
 ```
-
-***
-
-In these 
 
 ### Conclusion
 
