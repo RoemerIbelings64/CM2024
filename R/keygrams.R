@@ -92,7 +92,7 @@ key_templates <-
   )
 
 ## section 2.1 i love rock n roll
-twenty_six_plot <- twenty_six <-
+keygram_plot1 <- keygram_var1 <-
   get_tidy_audio_analysis("2Cdvbe2G4hZsnhNMKyGrie") |>
   compmus_align(sections, segments) |>
   select(sections) |>
@@ -106,7 +106,7 @@ twenty_six_plot <- twenty_six <-
   )
 
 ## section 3.1
-twenty_six_plot <- twenty_six |> 
+keygram_plot1 <- keygram_var1 |> 
   compmus_match_pitch_template(
     key_templates,         # Change to chord_templates if desired
     method = "manhattan",  # Try different distance metrics
@@ -123,7 +123,7 @@ twenty_six_plot <- twenty_six |>
 
 
 ## section 2.2 i love rock n roll latin
-twenty_five_plot <- twenty_five <-
+keygram_plot2 <- keygram_var2 <-
   get_tidy_audio_analysis("1kCQGipg9DCCtTlx80wZ8J") |>
   compmus_align(sections, segments) |>
   select(sections) |>
@@ -137,7 +137,7 @@ twenty_five_plot <- twenty_five <-
   )
 
 ## section 3.2
-twenty_five_plot <- twenty_five |> 
+keygram_plot2 <- keygram_var2 |> 
   compmus_match_pitch_template(
     key_templates,         # Change to chord_templates if desired
     method = "manhattan",  # Try different distance metrics
@@ -152,6 +152,6 @@ twenty_five_plot <- twenty_five |>
   labs(x = "Time (s)", y = "") +
   ggtitle("Latin remake")
 
-saveRDS(object = twenty_six_plot, file = "data/twenty_six-plot.RDS")
-saveRDS(object = twenty_five_plot, file = "data/twenty_five-plot.RDS")
+saveRDS(object = keygram_plot1, file = "data/keygram-plot1.RDS")
+saveRDS(object = keygram_plot2, file = "data/keygram-plot2.RDS")
 

@@ -4,13 +4,13 @@ library(plotly)
 library(compmus)
 
 # Section 1
-pata_pata <-
+novelty_var <-
   get_tidy_audio_analysis("3uy90vHHATPjtdilshDQDt") |>
   select(segments) |>
   unnest(segments)
 
 # Section 2
-pata_pata_plot1 <- pata_pata |>
+novelty_func_plot1 <- novelty_var |>
   mutate(loudness_max_time = start + loudness_max_time) |>
   arrange(loudness_max_time) |>
   mutate(delta_loudness = loudness_max - lag(loudness_max)) |>
@@ -21,7 +21,7 @@ pata_pata_plot1 <- pata_pata |>
   labs(x = "Time (s)", y = "Novelty")
 
 # Section 3
-pata_pata_plot2 <- pata_pata |>
+novelty_func_plot2 <- novelty_var |>
   mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
   arrange(start) |>
   mutate(pitches = map2(pitches, lag(pitches), `-`)) |>
@@ -36,7 +36,7 @@ pata_pata_plot2 <- pata_pata |>
   labs(x = "Time (s)", y = "Novelty")
 
 # Section 4
-pata_pata_plot3 <- pata_pata |>
+novelty_func_plot3 <- novelty_var |>
   arrange(start) |>
   mutate(timbre = map2(timbre, lag(timbre), `-`)) |>
   slice(-1) |>
@@ -50,6 +50,6 @@ pata_pata_plot3 <- pata_pata |>
   labs(x = "Time (s)", y = "Novelty")
 
 
-saveRDS(object = pata_pata_plot1, file = "data/pata_pata-plot1.RDS")
-saveRDS(object = pata_pata_plot2, file = "data/pata_pata-plot2.RDS")
-saveRDS(object = pata_pata_plot3, file = "data/pata_pata-plot3.RDS")
+saveRDS(object = novelty_func_plot1, file = "data/novelty_func-plot1.RDS")
+saveRDS(object = novelty_func_plot2, file = "data/novelty_func-plot2.RDS")
+saveRDS(object = novelty_func_plot3, file = "data/novelty_func-plot3.RDS")

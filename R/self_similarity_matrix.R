@@ -5,7 +5,7 @@ library(compmus)
 
 
 ## section 1
-bzt <-
+ssm_var <-
   get_tidy_audio_analysis("1DfGPEHxTYeaJpiNA4xUb5") |> # Change URI.
   compmus_align(bars, segments) |>                     # Change `bars`
   select(bars) |>                                      #   in all three
@@ -26,7 +26,7 @@ bzt <-
   )
 
 # ## section 2
-bzt_plot1 <- bzt |>
+ssm_plot1 <- ssm_var |>
   compmus_gather_timbre() |>
   ggplot(
     aes(
@@ -42,7 +42,7 @@ bzt_plot1 <- bzt |>
   theme_classic()
 
 ## section 3
-bzt_plot1 <- bzt |>
+ssm_plot1 <- ssm_var |>
   compmus_self_similarity(timbre, "cosine") |> 
   ggplot(
     aes(
@@ -62,7 +62,7 @@ bzt_plot1 <- bzt |>
 
 
 ## section 1.2 latin remake
-bzt2 <-
+ssm_var2 <-
   get_tidy_audio_analysis("3HolazxMAM4peSYUDJf5Yb") |> # Change URI.
   compmus_align(bars, segments) |>                     # Change `bars`
   select(bars) |>                                      #   in all three
@@ -83,7 +83,7 @@ bzt2 <-
   )
 
 ## section 2.2 latin remake
-bzt_plot2 <- bzt2 |>
+ssm_plot2 <- ssm_var2 |>
   compmus_gather_timbre() |>
   ggplot(
     aes(
@@ -99,7 +99,7 @@ bzt_plot2 <- bzt2 |>
   theme_classic()
 
 ## section 3.2 latin remake
-bzt_plot2 <- bzt2 |>
+ssm_plot2 <- ssm_var2 |>
   compmus_self_similarity(timbre, "cosine") |> 
   ggplot(
     aes(
@@ -117,5 +117,5 @@ bzt_plot2 <- bzt2 |>
   labs(x = "", y = "") +
   ggtitle("Für Elise Latin-remake")
 
-saveRDS(object = bzt_plot1, file = "data/bzt-plot1.RDS")
-saveRDS(object = bzt_plot2, file = "data/bzt-plot2.RDS")
+saveRDS(object = ssm_plot1, file = "data/ssm-plot1.RDS")
+saveRDS(object = ssm_plot2, file = "data/ssm-plot2.RDS")

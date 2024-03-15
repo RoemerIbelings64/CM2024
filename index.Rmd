@@ -16,6 +16,21 @@ library(plotly)
 library(compmus)
 ```
 
+
+### Tempogram
+
+```{r, echo = FALSE}
+tempo_plot1 <- readRDS(file = "data/tempo-plot1.RDS")
+tempo_plot1
+
+tempo_plot2 <- readRDS(file = "data/tempo-plot2.RDS")
+tempo_plot2
+```
+
+***
+
+These are two tempograms of the song I will survive by Gloria Gaynor. The second one actually is the latin remake called Yo Vivire, which translates to I will survive. The original song is a bit faster than the latin song, what I did not expect. Both tempograms are Fourier-based. As you can see the latin remake one is a lot clearer than than the original. This is probably because of the percussion.
+
 ### Introduction {data-commentary-width=400}
 
 *** 
@@ -33,11 +48,11 @@ I want to conduct research on the differences between music from Latin America a
 ### Self similarity matrix
 
 ```{r, echo = FALSE}
-bzt_plot1 <- readRDS(file = "data/bzt-plot1.RDS")
-bzt_plot1
+ssm_plot1 <- readRDS(file = "data/ssm-plot1.RDS")
+ssm_plot1
 
-bzt_plot2 <- readRDS(file = "data/bzt-plot2.RDS")
-bzt_plot2
+ssm_plot2 <- readRDS(file = "data/ssm-plot2.RDS")
+ssm_plot2
 ```
 
 ***
@@ -48,11 +63,11 @@ In these self similarity matrices I compared the song Fur Elise with it the Lati
 ### Key and Chord analysis
 
 ```{r, echo = FALSE}
-twenty_six_plot <- readRDS(file = "data/twenty_six-plot.RDS")
-twenty_six_plot
+keygram_plot1 <- readRDS(file = "data/keygram-plot1.RDS")
+keygram_plot1
 
-twenty_five_plot <- readRDS(file = "data/twenty_five-plot.RDS")
-twenty_five_plot
+keygram_plot2 <- readRDS(file = "data/keygram-plot2.RDS")
+keygram_plot2
 ```
 
 *** 
@@ -78,22 +93,14 @@ jazz_plot2
 ### Novelty functions
 
 ```{r, echo = FALSE}
-pata_pata_plot1 <- readRDS(file = "data/pata_pata-plot1.RDS")
-pata_pata_plot1
+novelty_func_plot1 <- readRDS(file = "data/novelty_func-plot1.RDS")
+novelty_func_plot1
 
-pata_pata_plot2 <- readRDS(file = "data/pata_pata-plot2.RDS")
-pata_pata_plot2
+novelty_func_plot2 <- readRDS(file = "data/novelty_func-plot2.RDS")
+novelty_func_plot2
 
-pata_pata_plot3 <- readRDS(file = "data/pata_pata-plot3.RDS")
-pata_pata_plot3
-```
-
-
-### Tempogram
-
-```{r, echo = FALSE}
-graveola_plot <- readRDS(file = "data/graveola-plot.RDS")
-graveola_plot
+novelty_func_plot3 <- readRDS(file = "data/novelty_func-plot3.RDS")
+novelty_func_plot3
 ```
 
 
