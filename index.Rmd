@@ -16,6 +16,28 @@ library(plotly)
 library(compmus)
 ```
 
+### Dendogram / Heatmap
+
+```{r, echo = FALSE}
+dendogram_plot <- readRDS(file = "data/dendogram-plot.RDS")
+dendogram_plot
+```
+
+*** 
+
+Here a dendogram is showed of the playlist "Salsa covers" containing all the covers of songs latin style in this corpus. You could argue there are 2 or 4 groups in this playlist. The method used is complete because this gave the best results.
+
+
+### Classification
+```{r, echo = FALSE}
+workflow_plot <- readRDS(file = "data/workflow-plot.RDS")
+workflow_plot
+
+indie_features_plot <- readRDS(file = "data/indie_features-plot.RDS")
+indie_features_plot
+```
+
+***
 
 ### Tempogram
 
